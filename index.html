@@ -2,293 +2,431 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#f3f8f1">
-<title>Đảo Mèo</title>
-
-<!-- Tăng tốc kết nối tới Google Apps Script -->
+<!-- ===== Preconnect tới Google Apps Script ===== -->
 <link rel="preconnect" href="https://script.google.com" crossorigin>
 <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link rel="dns-prefetch" href="https://script.google.com">
 <link rel="dns-prefetch" href="https://script.googleusercontent.com">
-
-<link rel="stylesheet" href="css/style.css">
+<title>S Rank — Daily Mission</title>
+<link rel="stylesheet" href="css/base.css">
 </head>
 <body>
+<main id="space">
+<div id="status"></div>
+<div id="connectionState" class="off"><span class="dot"></span><span id="connectionText">Đang kết nối…</span></div>
+<div id="appVersion" aria-label="Phiên bản">v1.04</div>
 
-<!-- ============================================================
-     MÀN 1 — ĐĂNG NHẬP
-     ============================================================ -->
-<section id="loginScreen" class="screen screen--active">
-  <div class="login-wrap">
+<div id="questionWrap">
+  <div id="counter">CÂU 1</div>
+  <div id="question"><span class="landing-title">CHECKLIST ĐẢO MÈO</span><span class="landing-cta">CLICK HERE</span></div>
+</div>
 
-    <header class="login-header">
-      <h1 class="login-title">
-        <span class="cat">🐱</span> ĐẢO MÈO
-        <svg class="title-underline" viewBox="0 0 130 12" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M2,8 Q30,2 65,6 T128,5"
-                fill="none" stroke="#efd48a" stroke-width="4" stroke-linecap="round"/>
-        </svg>
-      </h1>
-      <p class="login-sub">Chọn tên của bạn để tiếp tục</p>
-    </header>
 
-    <div class="wheel-area">
-      <div class="wheel-viewport" id="wheelViewport">
-        <div class="wheel-selection"></div>
-        <div class="wheel-shine" id="wheelShine"></div>
-        <div class="wheel-items" id="wheelItems"></div>
-      </div>
-      <p class="wheel-hint">Vuốt lên / xuống để chọn</p>
-    </div>
+<div id="wheelArea">
+  <div id="wheelViewport"><div id="selectionLine"></div><div id="items"></div></div>
+  <div id="wheelHint">Vuốt lên / xuống để chọn</div>
+  <button id="confirm" type="button">Xác nhận ❤️</button>
+</div>
 
-    <button id="loginBtn" class="btn btn--primary" type="button" disabled>
-      Đăng nhập
-    </button>
+<div id="message"></div>
 
-    <p id="loginStatus" class="login-status"></p>
-  </div>
+<section id="checklistPanel">
+  <div id="checklistScroll"><table id="checklist">
+    <thead><tr><th>Người chơi</th><th>Giờ</th><th>Hoàn thành</th></tr></thead><tbody></tbody>
+  </table></div>
+  <div id="checklistActions"><button id="captureBtn" type="button">📸 Chụp checklist</button><button id="syncBtn" type="button">↻ Đồng bộ lại</button></div>
 </section>
 
-<!-- ============================================================
-     MÀN 2 — TRANG CÁ NHÂN
-     ============================================================ -->
-<section id="profileScreen" class="screen">
-  <div class="profile-wrap">
-
-    <header class="profile-header">
-      <button id="logoutBtn" class="btn btn--ghost btn--sm" type="button">← Đăng xuất</button>
-      <span class="profile-brand">🐱 Đảo Mèo</span>
-    </header>
-
-    <div class="profile-card">
-      <div class="avatar-ring">
-        <div class="avatar" id="profileAvatar">?</div>
-      </div>
-      <h2 class="profile-name" id="profileName">—</h2>
-      <p class="profile-subtitle">TRANG CÁ NHÂN</p>
-    </div>
-
-    <div class="menu-card">
-      <p class="menu-label">MENU</p>
-
-      <!-- Mỗi nút menu: tiêu đề + mô tả nhỏ + mũi tên -->
-      <button class="menu-item" type="button" data-page="checklist">
-        <span class="menu-icon">☑</span>
-        <span class="menu-text">
-          <span class="menu-title">Checklist</span>
-          <span class="menu-desc">Xem và check-in hàng ngày</span>
-        </span>
-        <span class="menu-arrow">→</span>
-      </button>
-
-      <button class="menu-item" type="button" data-page="kdv">
-        <span class="menu-icon">📜</span>
-        <span class="menu-text">
-          <span class="menu-title">Luật KDV</span>
-          <span class="menu-desc">12 quy định kiểm duyệt</span>
-        </span>
-        <span class="menu-arrow">→</span>
-      </button>
-
-      <button class="menu-item" type="button" data-page="attendance">
-        <span class="menu-icon">🗓</span>
-        <span class="menu-text">
-          <span class="menu-title">Chấm công</span>
-          <span class="menu-desc">Lịch làm việc tháng này</span>
-        </span>
-        <span class="menu-arrow">→</span>
-      </button>
-
-      <button class="menu-item" type="button" data-page="top">
-        <span class="menu-icon">🏆</span>
-        <span class="menu-text">
-          <span class="menu-title">BXH TOP</span>
-          <span class="menu-desc">Xếp hạng theo điểm chấm công</span>
-        </span>
-        <span class="menu-arrow">→</span>
-      </button>
-
-      <button class="menu-item" type="button" data-page="lunch">
-        <span class="menu-icon">🍜</span>
-        <span class="menu-text">
-          <span class="menu-title">Bữa trưa</span>
-          <span class="menu-desc">Hôm nay ăn gì?</span>
-        </span>
-        <span class="menu-arrow">→</span>
-      </button>
-    </div>
-
+<section id="topPanel" aria-hidden="true">
+  <div id="topTitle">🏆 BXH TOP THÁNG 9</div>
+  <div id="topSub">Xếp hạng theo điểm chấm công</div>
+  <div id="topMonthBar">
+    <select id="topMonthSelect" aria-label="Chọn tháng BXH TOP"></select>
   </div>
+  <div id="topScroll"><table id="topTable">
+    <thead><tr><th>#</th><th>Tên</th><th>⭐ Điểm</th><th>Rank</th></tr></thead><tbody></tbody>
+  </table></div>
+  <div id="topActions"><button id="topCaptureBtn" type="button">📸 Chụp BXH</button><button id="topCloseBtn" type="button">Đóng</button></div>
 </section>
 
-<!-- ============================================================
-     MÀN 3 — CHECKLIST (check-in được)
-     ============================================================ -->
-<section id="checklistScreen" class="screen">
-  <div class="page-wrap">
-    <header class="page-header">
-      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
-      <h2 class="page-title">☑ Checklist hôm nay</h2>
-      <button id="checklistSyncBtn" class="btn btn--ghost btn--sm" type="button" title="Đồng bộ lại">↻</button>
-    </header>
+<nav id="bottomNav" aria-label="Điều hướng chính">
+  <button id="homeBtn" type="button" aria-label="Về trang chủ">⌂ Home</button>
+  <button id="adminBtn" type="button" aria-label="Mở cài đặt admin" aria-haspopup="dialog">⚙ Admin</button>
+  <button id="monitorBtn" type="button" aria-label="Mở bảng giám sát" aria-haspopup="dialog">👁 Giám sát</button>
+  <button id="topBtn" type="button" aria-label="Mở bảng xếp hạng" aria-haspopup="dialog">🏆 BXH TOP</button>
+  <button id="checklistBtn" type="button" aria-label="Mở checklist" aria-haspopup="dialog" aria-expanded="false">☑ Checklist</button>
+</nav>
+<nav id="secondaryNav" aria-label="Công cụ">
+  <button id="kdvRulesBtn" type="button" aria-label="Mở Luật KDV" aria-haspopup="dialog">📜 Luật KDV</button>
+  <button id="lunchBtn" type="button" aria-label="Bữa trưa ăn gì?" aria-haspopup="dialog">🍜 Bữa trưa ăn gì?</button>
+  <button id="attendanceBtn" type="button" aria-label="Mở Chấm công" aria-haspopup="dialog">🗓 Chấm công</button>
+  <button id="quizBtn" type="button" aria-label="Mở Bài kiểm tra" aria-haspopup="dialog">📝 Bài kiểm tra</button>
+  <button id="quizAdminBtn" type="button" aria-label="Tạo bài kiểm tra" aria-haspopup="dialog" hidden>⚙ Tạo Ktra</button>
+</nav>
 
-    <div class="checklist-card">
-      <table class="checklist-table" id="checklistTable">
-        <thead>
-          <tr>
-            <th>Người chơi</th>
-            <th>Giờ</th>
-            <th class="col-status">Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody id="checklistBody">
-          <!-- Skeleton sẽ được JS render -->
-        </tbody>
+<div id="lunchChoiceOverlay" aria-hidden="true">
+  <section id="lunchChoicePanel" role="dialog" aria-modal="true" aria-labelledby="lunchChoiceTitle">
+    <button id="lunchChoiceClose" type="button" aria-label="Đóng">×</button>
+    <div class="lunchChoiceIcon">🍽️</div>
+    <div id="lunchChoiceTitle">BỮA TRƯA ĂN GÌ?</div>
+    <div id="lunchChoiceSub">Chọn kiểu ăn rồi để vòng quay chọn món cho m</div>
+    <div id="lunchChoiceButtons">
+      <button type="button" class="lunchModeBtn home" data-mode="home"><span>🏠</span><b>Ăn tại nhà</b><small>50 món mặn + 50 món canh</small></button>
+      <button type="button" class="lunchModeBtn out" data-mode="out"><span>🍜</span><b>Ăn ngoài</b><small>50 món</small></button>
+      <button type="button" class="lunchModeBtn all" data-mode="all"><span>🎲</span><b>Ngẫu nhiên tất cả</b><small>Ăn tại nhà hoặc ăn ngoài</small></button>
+    </div>
+    <button id="lunchAddBtn" type="button">＋ Thêm món ăn</button>
+    <div id="lunchAddForm">
+      <input id="lunchAddInput" type="text" maxlength="60" autocomplete="off" placeholder="Nhập tên món muốn thêm...">
+      <div id="lunchAddCategories">
+        <button type="button" class="lunchAddCat home" data-add-category="savory">🍖 Món mặn</button>
+        <button type="button" class="lunchAddCat soup" data-add-category="soup">🍲 Món canh</button>
+        <button type="button" class="lunchAddCat out" data-add-category="out">🍜 Ăn ngoài</button>
+      </div>
+      <div id="lunchAddStatus" aria-live="polite"></div>
+    </div>
+    <button id="lunchManageBtn" type="button">⚙ Quản lý danh sách món</button>
+  </section>
+</div>
+
+<div id="lunchManageOverlay" aria-hidden="true">
+  <section id="lunchManagePanel" role="dialog" aria-modal="true" aria-labelledby="lunchManageTitle">
+    <button id="lunchManageClose" type="button" aria-label="Đóng">×</button>
+    <div id="lunchManageTitle">⚙ QUẢN LÝ DANH SÁCH MÓN</div>
+    <div id="lunchManageSub">Đổi tên hoặc xóa món. Thay đổi được lưu trên thiết bị này.</div>
+    <div id="lunchManageTabs">
+      <button class="lunchManageTab active" type="button" data-manage-category="savory">🍖 Món mặn</button>
+      <button class="lunchManageTab" type="button" data-manage-category="soup">🍲 Món canh</button>
+      <button class="lunchManageTab" type="button" data-manage-category="out">🍜 Ăn ngoài</button>
+    </div>
+    <div id="lunchManageList"></div>
+    <div id="lunchManageStatus" aria-live="polite"></div>
+  </section>
+</div>
+<div id="lunchResult" aria-live="polite" aria-hidden="true"><span class="lunchLabel">🍽️ Thực đơn hôm nay</span><span class="lunchDish"><span class="lunchLine savory"><span class="lineLabel">Món mặn</span><span class="lineValue"></span></span><span class="lunchLine soup"><span class="lineLabel">Món canh</span><span class="lineValue"></span></span><span class="lunchLine out"><span class="lineLabel">Ăn ngoài</span><span class="lineValue"></span></span></span></div>
+
+
+<div id="kdvRulesOverlay" aria-hidden="true">
+  <section id="kdvRulesPanel" role="dialog" aria-modal="true" aria-labelledby="kdvRulesTitle">
+    <button id="kdvRulesClose" type="button" aria-label="Đóng Luật KDV">×</button>
+    <div class="kdvSparkle">✦　♡　✦</div>
+    <div id="kdvRulesTitle">📜 LUẬT KDV</div>
+    <div id="kdvRulesSub">Quy định duyệt bài • Đọc kỹ trước khi kiểm duyệt</div>
+
+    <div id="kdvRulesList">
+      <article class="kdvRule">
+        <span class="kdvNum">01</span>
+        <div>Cấm đăng video có logo <b>(TIKTOK, DOUYIN,...)</b></div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">02</span>
+        <div>Cấm đăng video có <b>NHẠC NƯỚC NGOÀI</b></div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">03</span>
+        <div>Cấm các hình ảnh chứa <b>BỘ PHẬN NHẠY CẢM</b> của người, động vật</div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">04</span>
+        <div>Cấm <b>MUA - BÁN - CHO - TẶNG</b> dưới mọi hình thức</div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">05</span>
+        <div>Cấm các hình ảnh <b>NUÔI NHỐT - HÀNH HẠ - NGƯỢC ĐÃI ĐỘNG VẬT</b></div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">06</span>
+        <div>Cấm các hình ảnh <b>THUỐC SÚNG, MA TUÝ, THUỐC PHIỆN, CẦN SA</b></div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">07</span>
+        <div>Cấm các bài viết về <b>TÔN GIÁO, CHÍNH TRỊ, THÙ HẰN</b></div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">08</span>
+        <div>Các bài <b>PHỐT</b> đều phải thông qua <b>ADMIN</b> kiểm duyệt mới được đăng</div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">09</span>
+        <div><b>KHÔNG LIVE STREAM</b> khi chưa được <b>ADMIN</b> cho phép</div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">10</span>
+        <div><b>KHÔNG XOÁ BÀI</b> khi bài không vi phạm các quy định trên</div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">11</span>
+        <div><b>KHÔNG BÁN HÀNG</b> dưới mọi hình thức, phải đăng ký qua <b>ADMIN</b></div>
+      </article>
+      <article class="kdvRule">
+        <span class="kdvNum">12</span>
+        <div><b>KHÔNG BẬT TÍNH NĂNG PHÊ DUYỆT TRƯỚC</b> cho người khác</div>
+      </article>
+    </div>
+
+    <div class="kdvFooter">♡ Kiểm duyệt đúng luật • Công bằng • Rõ ràng ♡</div>
+  </section>
+</div>
+
+
+<div id="quizOverlay" aria-hidden="true">
+  <section id="quizPanel" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+    <button id="quizClose" type="button" aria-label="Đóng Bài kiểm tra">×</button>
+    <div id="quizTitle">📝 BÀI KIỂM TRA</div>
+    <div id="quizSub">Bảng điểm kiểm tra</div>
+    <div id="quizLeaderboardWrap">
+      <table id="quizLeaderboard">
+        <thead><tr><th>#</th><th>Tên</th><th>Điểm</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div id="quizEmpty">Chưa có ai hoàn thành bài kiểm tra.</div>
+    </div>
+    <button id="startQuizBtn" type="button">🎯 Làm bài kiểm tra</button>
+  </section>
+</div>
+
+<div id="quizNameOverlay" aria-hidden="true">
+  <section id="quizNamePanel" role="dialog" aria-modal="true" aria-labelledby="quizNameTitle">
+    <button id="quizNameClose" type="button" aria-label="Đóng chọn tên">×</button>
+    <div id="quizNameTitle">👤 Chọn tên</div>
+    <div id="quizNameSub">Chọn tên của bạn để bắt đầu</div>
+    <div id="quizNameList"></div>
+  </section>
+</div>
+
+<div id="quizTakeOverlay" aria-hidden="true">
+  <section id="quizTakePanel" role="dialog" aria-modal="true" aria-labelledby="quizTakeTitle">
+    <button id="quizTakeClose" type="button" aria-label="Thoát bài kiểm tra">×</button>
+    <div id="quizTakeTop">
+      <div id="quizTakeTitle">📝 Bài kiểm tra</div>
+      <div id="quizProgress"></div>
+    </div>
+    <div id="quizQuestion"></div>
+    <div id="quizAnswers"></div>
+    <button id="quizNextBtn" type="button" disabled>Tiếp tục</button>
+  </section>
+</div>
+
+<div id="quizResultOverlay" aria-hidden="true">
+  <section id="quizResultPanel" role="dialog" aria-modal="true">
+    <div class="quizResultIcon">🎉</div>
+    <div id="quizResultTitle">Hoàn thành!</div>
+    <div id="quizResultName"></div>
+    <div id="quizResultScore">0 điểm</div>
+    <div id="quizResultDetail"></div>
+    <button id="quizResultClose" type="button">Xem BXH</button>
+  </section>
+</div>
+
+<div id="quizBuilderOverlay" aria-hidden="true">
+  <section id="quizBuilderPanel" role="dialog" aria-modal="true" aria-labelledby="quizBuilderTitle">
+    <button id="quizBuilderClose" type="button" aria-label="Đóng Tạo Ktra">×</button>
+    <div id="quizBuilderTitle">⚙ TẠO BÀI KIỂM TRA</div>
+    <div id="quizBuilderSub">Mỗi câu đúng = 10 điểm • Chọn 1 đáp án đúng</div>
+    <div id="quizBuilderList"></div>
+    <div id="quizBuilderActions">
+      <button id="addQuizQuestionBtn" type="button">＋ Thêm câu hỏi</button>
+      <button id="saveQuizBtn" type="button">💾 Lưu bài kiểm tra</button>
+    </div>
+    <div id="quizBuilderStatus"></div>
+  </section>
+</div>
+
+<div id="monitorOverlay" aria-hidden="true">
+  <section id="monitorPanel" role="dialog" aria-modal="true" aria-labelledby="monitorTitle">
+    <div id="monitorTitle">👁 Giám sát</div>
+    <div id="monitorSub">Bấm CHECK để mở Facebook của từng người</div>
+    <div id="monitorScroll">
+      <table id="monitorTable">
+        <thead><tr><th>Người chơi</th><th>Thao tác</th></tr></thead>
+        <tbody></tbody>
       </table>
     </div>
-    <p id="checklistStatus" class="page-status"></p>
-  </div>
-</section>
-
-<!-- ============================================================
-     MÀN 4 — LUẬT KDV (12 luật)
-     ============================================================ -->
-<section id="kdvScreen" class="screen">
-  <div class="page-wrap">
-    <header class="page-header">
-      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
-      <h2 class="page-title">📜 Luật KDV</h2>
-      <span style="width:70px"></span>
-    </header>
-
-    <p class="page-sub">Quy định duyệt bài • Đọc kỹ trước khi kiểm duyệt</p>
-
-    <div class="kdv-list">
-      <article class="kdv-item"><span class="kdv-num">01</span><div>Cấm đăng video có logo <b>(TIKTOK, DOUYIN,...)</b></div></article>
-      <article class="kdv-item"><span class="kdv-num">02</span><div>Cấm đăng video có <b>NHẠC NƯỚC NGOÀI</b></div></article>
-      <article class="kdv-item"><span class="kdv-num">03</span><div>Cấm các hình ảnh chứa <b>BỘ PHẬN NHẠY CẢM</b> của người, động vật</div></article>
-      <article class="kdv-item"><span class="kdv-num">04</span><div>Cấm <b>MUA - BÁN - CHO - TẶNG</b> dưới mọi hình thức</div></article>
-      <article class="kdv-item"><span class="kdv-num">05</span><div>Cấm các hình ảnh <b>NUÔI NHỐT - HÀNH HẠ - NGƯỢC ĐÃI ĐỘNG VẬT</b></div></article>
-      <article class="kdv-item"><span class="kdv-num">06</span><div>Cấm các hình ảnh <b>THUỐC SÚNG, MA TUÝ, THUỐC PHIỆN, CẦN SA</b></div></article>
-      <article class="kdv-item"><span class="kdv-num">07</span><div>Cấm các bài viết về <b>TÔN GIÁO, CHÍNH TRỊ, THÙ HẰN</b></div></article>
-      <article class="kdv-item"><span class="kdv-num">08</span><div>Các bài <b>PHỐT</b> đều phải thông qua <b>ADMIN</b> kiểm duyệt mới được đăng</div></article>
-      <article class="kdv-item"><span class="kdv-num">09</span><div><b>KHÔNG LIVE STREAM</b> khi chưa được <b>ADMIN</b> cho phép</div></article>
-      <article class="kdv-item"><span class="kdv-num">10</span><div><b>KHÔNG XOÁ BÀI</b> khi bài không vi phạm các quy định trên</div></article>
-      <article class="kdv-item"><span class="kdv-num">11</span><div><b>KHÔNG BÁN HÀNG</b> dưới mọi hình thức, phải đăng ký qua <b>ADMIN</b></div></article>
-      <article class="kdv-item"><span class="kdv-num">12</span><div><b>KHÔNG BẬT TÍNH NĂNG PHÊ DUYỆT TRƯỚC</b> cho người khác</div></article>
+    <button id="monitorCloseBtn" type="button" aria-label="Đóng bảng giám sát" title="Đóng">×</button>
+  </section>
+</div>
+<div id="linkEditorOverlay" aria-hidden="true">
+  <section id="linkEditorPanel" role="dialog" aria-modal="true" aria-labelledby="linkEditorTitle">
+    <div id="linkEditorTitle">🔗 Gán liên kết</div>
+    <div id="linkEditorName"></div>
+    <input id="linkEditorInput" type="url" inputmode="url" autocomplete="off" placeholder="https://facebook.com/ten-nguoi">
+    <div id="linkEditorHint">Mỗi người có thể dùng một liên kết riêng. Liên kết được lưu trên thiết bị này.</div>
+    <div id="linkEditorActions">
+      <button id="linkEditorCancel" type="button">Huỷ</button>
+      <button id="linkEditorClear" type="button">Xoá link</button>
+      <button id="linkEditorSave" type="button">Lưu</button>
     </div>
-
-    <p class="kdv-footer">♡ Kiểm duyệt đúng luật • Công bằng • Rõ ràng ♡</p>
-  </div>
-</section>
-
-<!-- ============================================================
-     MÀN 5 — CHẤM CÔNG
-     ============================================================ -->
-<section id="attendanceScreen" class="screen">
-  <div class="page-wrap">
-    <header class="page-header">
-      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
-      <h2 class="page-title">🗓 Chấm công</h2>
-      <button id="attendanceSyncBtn" class="btn btn--ghost btn--sm" type="button" title="Đồng bộ lại">↻</button>
-    </header>
-
-    <div class="att-picker">
-      <label class="att-label" for="attendanceEmployee">Nhân viên</label>
-      <select id="attendanceEmployee"></select>
+  </section>
+</div>
+<div id="adminPasswordOverlay" class="adminOverlay" aria-hidden="true" style="position:fixed;inset:0;z-index:21000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);">
+  <section id="adminPasswordBox">
+    <div id="adminPasswordTitle">🔐 Admin</div>
+    <div id="adminPasswordSub">Nhập mật khẩu để mở cài đặt</div>
+    <input id="adminPasswordInput" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••">
+    <div id="adminPasswordMsg"></div>
+    <div id="adminPasswordActions"><button id="adminPasswordCancel" type="button">Huỷ</button><button id="adminPasswordOk" type="button">Xác nhận</button></div>
+  </section>
+</div>
+<div id="adminOverlay" aria-hidden="true">
+  <section id="adminPanel" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+    <div id="adminTitle">⚙ Cài đặt Admin</div>
+    <div id="adminSub">Thiết lập giờ làm mới checklist hằng ngày</div>
+    <div class="adminField">
+      <label for="resetTimeInput">Giờ reset mỗi ngày</label>
+      <input id="resetTimeInput" type="text" value="00:00" inputmode="numeric" maxlength="5" pattern="(?:[01]\d|2[0-3]):[0-5]\d" placeholder="00:00" autocomplete="off" aria-label="Giờ reset 24 giờ">
     </div>
-
-    <div class="att-month-nav">
-      <button id="attendancePrev" class="btn btn--ghost btn--sm" type="button">‹</button>
-      <div id="attendanceMonthLabel" class="att-month-text">Tháng 9</div>
-      <button id="attendanceNext" class="btn btn--ghost btn--sm" type="button">›</button>
+    <div class="adminField">
+      <label for="checklistLockTimeInput">Giờ khoá Checklist</label>
+      <input id="checklistLockTimeInput" type="text" value="21:00" inputmode="numeric" maxlength="5" pattern="(?:[01]\d|2[0-3]):[0-5]\d" placeholder="21:00" autocomplete="off" aria-label="Giờ khoá Checklist 24 giờ">
     </div>
-
-    <div class="att-calendar">
-      <div class="att-week">
-        <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+    <div style="margin:-5px 0 12px;font-size:10px;line-height:1.4;color:rgba(255,255,255,.42);text-align:right;">Sau giờ này nút Checklist sẽ chuyển thành "Tạm khoá Checklist".</div>
+    <div id="adminStatus"></div>
+    <div id="adminActions">
+      <button id="adminCloseBtn" type="button">Đóng</button>
+      <button id="adminSaveBtn" type="button">Lưu cài đặt</button>
+    </div>
+    <div id="adminChecklistEditor" style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);">
+      <div style="font-size:13px;color:rgba(255,255,255,.72);margin-bottom:9px;">☑ Chỉnh checklist</div>
+      <div id="adminChecklistRows" style="max-height:230px;overflow:auto;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.03);"></div>
+    </div>
+  </section>
+</div>
+<div id="hint" aria-hidden="true" hidden></div>
+<!-- ===== TRANG BỮA TRƯA — full-screen ===== -->
+<section id="lunchPage" aria-label="Bữa trưa ăn gì">
+  <div class="lunch-page-inner">
+    <div class="lunch-shell">
+      <header class="lunch-head">
+        <button id="lunchBack" class="lunch-back" type="button" aria-label="Quay lại">‹</button>
+        <div class="lunch-head-copy">
+          <div class="lunch-kicker">HỆ THỐNG 03</div>
+          <div class="lunch-title">Bữa trưa ăn gì?</div>
+        </div>
+      </header>
+      <div id="lunchResultCard" class="lunch-result-card">
+        <div class="lunch-result-icon">🍽️</div>
+        <span class="lunch-result-label">Thực đơn hôm nay</span>
+        <div id="lunchResultBody"><div class="lunch-result-placeholder">Chọn kiểu ăn bên dưới để quay món nha 🎲</div></div>
+        <button id="lunchRerollBtn" class="lunch-reroll-btn" type="button" style="display:none;">🎲 QUAY LẠI</button>
       </div>
-      <div id="attendanceGrid" class="att-grid"></div>
-    </div>
-
-    <div class="att-summary">
-      <div class="att-stat"><strong id="attendanceWorkCount">0</strong><span>Ngày làm</span></div>
-      <div class="att-stat"><strong id="attendanceOffCount">0</strong><span>Ngày nghỉ</span></div>
-      <div class="att-stat"><strong id="attendanceLeaveCount">0</strong><span>Nghỉ phép</span></div>
-    </div>
-
-    <p id="attendanceStatus" class="page-status"></p>
-  </div>
-</section>
-
-<!-- ============================================================
-     MÀN 6 — BXH TOP
-     ============================================================ -->
-<section id="topScreen" class="screen">
-  <div class="page-wrap">
-    <header class="page-header">
-      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
-      <h2 class="page-title">🏆 BXH TOP</h2>
-      <button id="topSyncBtn" class="btn btn--ghost btn--sm" type="button" title="Đồng bộ lại">↻</button>
-    </header>
-
-    <div class="top-month-bar">
-      <select id="topMonthSelect"></select>
-    </div>
-
-    <div class="top-card">
-      <table class="top-table">
-        <thead>
-          <tr><th>#</th><th>Tên</th><th>⭐ Điểm</th><th>Rank</th></tr>
-        </thead>
-        <tbody id="topBody"></tbody>
-      </table>
-    </div>
-    <p id="topStatus" class="page-status"></p>
-  </div>
-</section>
-
-<!-- ============================================================
-     MÀN 7 — BỮA TRƯA
-     ============================================================ -->
-<section id="lunchScreen" class="screen">
-  <div class="page-wrap">
-    <header class="page-header">
-      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
-      <h2 class="page-title">🍜 Bữa trưa</h2>
-      <span style="width:70px"></span>
-    </header>
-
-    <div class="lunch-result-card">
-      <p class="lunch-result-label">Thực đơn hôm nay</p>
-      <div id="lunchResultBody">
-        <p class="lunch-placeholder">Chọn kiểu ăn bên dưới để quay món 🎲</p>
+      <span class="lunch-section-title">Chọn kiểu ăn</span>
+      <div class="lunch-mode-grid">
+        <button type="button" class="lunch-mode-card home" data-mode="home"><span class="mode-icon">🏠</span><span class="mode-label">Ăn tại nhà</span><span class="mode-desc">50 món mặn + 50 món canh</span></button>
+        <button type="button" class="lunch-mode-card out" data-mode="out"><span class="mode-icon">🍜</span><span class="mode-label">Ăn ngoài</span><span class="mode-desc">50 món</span></button>
+        <button type="button" class="lunch-mode-card all" data-mode="all"><span class="mode-icon">🎲</span><span class="mode-label">Ngẫu nhiên</span><span class="mode-desc">Nhà hoặc ngoài</span></button>
       </div>
-      <button id="lunchRerollBtn" class="btn btn--primary btn--sm" type="button" style="display:none;margin-top:14px">🎲 Quay lại</button>
+      <div class="lunch-actions-grid">
+        <button id="lunchAddBtn2" class="lunch-action-btn" type="button">＋ Thêm món ăn</button>
+        <div id="lunchAddForm2" class="lunch-add-form">
+          <input id="lunchAddInput2" class="lunch-add-input" type="text" maxlength="60" autocomplete="off" placeholder="Nhập tên món muốn thêm...">
+          <div class="lunch-add-cats"><button type="button" class="lunch-add-cat home" data-add-category="savory">🍖 Món mặn</button><button type="button" class="lunch-add-cat soup" data-add-category="soup">🍲 Món canh</button><button type="button" class="lunch-add-cat out" data-add-category="out">🍜 Ăn ngoài</button></div>
+          <div id="lunchAddStatus2" class="lunch-add-status" aria-live="polite"></div>
+        </div>
+        <button id="lunchManageBtn2" class="lunch-action-btn solid" type="button">⚙ Quản lý danh sách món</button>
+      </div>
     </div>
+  </div>
+</section>
+</main>
 
-    <p class="menu-label" style="margin-top:20px">CHỌN KIỂU ĂN</p>
-    <div class="lunch-mode-grid">
-      <button class="lunch-mode-btn home" type="button" data-mode="home">
-        <span class="lunch-mode-icon">🏠</span>
-        <span class="lunch-mode-title">Ăn tại nhà</span>
-        <span class="lunch-mode-desc">Món mặn + canh</span>
-      </button>
-      <button class="lunch-mode-btn out" type="button" data-mode="out">
-        <span class="lunch-mode-icon">🍜</span>
-        <span class="lunch-mode-title">Ăn ngoài</span>
-        <span class="lunch-mode-desc">Quán, hàng ăn</span>
-      </button>
-      <button class="lunch-mode-btn all" type="button" data-mode="all">
-        <span class="lunch-mode-icon">🎲</span>
-        <span class="lunch-mode-title">Ngẫu nhiên</span>
-        <span class="lunch-mode-desc">Nhà hoặc ngoài</span>
-      </button>
+<!-- ===== TRANG 2: LỊCH CHẤM CÔNG ===== -->
+<section id="attendancePage" aria-label="Lịch chấm công">
+  <div class="att-page-inner">
+    <div class="att-shell">
+      <header class="att-head">
+        <button id="attendanceBack" class="att-back" type="button" aria-label="Quay lại">‹</button>
+        <div class="att-head-copy">
+          <div class="att-kicker">HỆ THỐNG 02</div>
+          <div class="att-title">Lịch chấm công</div>
+        </div>
+        <div id="attendanceMonthBadge" class="att-month-badge">THÁNG HIỆN TẠI</div>
+      </header>
+
+      <section class="att-card att-picker">
+        <label class="att-label" for="attendanceEmployeeWheelBtn">Nhân viên</label>
+        <select id="attendanceEmployee" aria-hidden="true" tabindex="-1"></select>
+        <button id="attendanceEmployeeWheelBtn" type="button" aria-label="Chọn nhân viên">
+          <span class="wheel-value">Đang tải nhân viên…</span><span class="wheel-chevron">⌄</span>
+        </button>
+      </section>
+
+      <div class="att-month-nav">
+        <button id="attendancePrev" type="button" aria-label="Tháng trước">‹</button>
+        <div id="attendanceMonthLabel">Tháng 9<span id="attendanceYearLabel">2026</span></div>
+        <button id="attendanceNext" type="button" aria-label="Tháng sau">›</button>
+      </div>
+
+      <section class="att-card att-calendar-card">
+        <div class="att-week" aria-hidden="true">
+          <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+        </div>
+        <div id="attendanceGrid" class="att-grid"></div>
+      </section>
+
+      <div class="att-summary">
+        <div class="att-stat"><strong id="attendanceWorkCount">0</strong><span>Ngày làm</span></div>
+        <div class="att-stat"><strong id="attendanceOffCount">0</strong><span>Ngày nghỉ</span></div>
+        <div class="att-stat"><strong id="attendanceLeaveCount">0</strong><span>Nghỉ phép</span></div>
+      </div>
+      <div id="attendanceSyncBar" aria-live="polite">
+        <button id="attendanceSyncBtn" type="button">↻ Đồng bộ</button>
+        <div id="attendanceSyncStatus" class="warn">Chưa đồng bộ dữ liệu.</div>
+      </div>
+      <div class="att-note">Nguồn danh sách: Check!C19:C32 • Dữ liệu chấm công: Check</div>
     </div>
   </div>
 </section>
 
-<script src="js/app.js"></script>
+<div id="attendanceNameWheel" aria-hidden="true">
+  <section class="att-name-wheel-panel" role="dialog" aria-modal="true" aria-label="Chọn nhân viên">
+    <div class="att-name-wheel-head">
+      <div class="att-name-wheel-title">Chọn nhân viên</div>
+      <button id="attendanceNameWheelClose" type="button" aria-label="Đóng">×</button>
+    </div>
+    <div id="attendanceNameWheelViewport" class="att-name-wheel-viewport">
+      <div class="att-name-wheel-selection"></div>
+      <div id="attendanceNameWheelItems" class="att-name-wheel-items"></div>
+    </div>
+    <div class="att-name-wheel-hint">Vuốt lên / xuống để chọn</div>
+    <button id="attendanceNameWheelConfirm" type="button">Xác nhận</button>
+  </section>
+</div>
+
+<div id="attendanceStatusOverlay" aria-hidden="true">
+  <section id="attendanceStatusPanel" role="dialog" aria-modal="true" aria-label="Cập nhật chấm công">
+    <div id="attendanceStatusHead">
+      <div id="attendanceStatusTitle">Cập nhật chấm công</div>
+      <button id="attendanceStatusClose" type="button" aria-label="Đóng">×</button>
+    </div>
+    <div id="attendanceStatusSub"></div>
+    <div id="attendanceStatusOptions">
+      <button class="att-status-option work" type="button" data-status="">✓ Đi làm</button>
+      <button class="att-status-option leave" type="button" data-status="P">Phép</button>
+      <button class="att-status-option off" type="button" data-status="O">OFF</button>
+      <button class="att-status-option ot" type="button" data-status="T">OT</button>
+      <button class="att-status-option q" type="button" data-status="Q">❓ Quên checklist</button>
+      <button class="att-status-option x" type="button" data-status="X">⚠️ Nghỉ không phép</button>
+      <button id="attendanceMultiBtn" class="att-status-option" type="button">☷ Chọn nhiều ngày</button>
+      <button class="att-status-option clear" type="button" data-status="__clear">Xóa trạng thái</button>
+    </div>
+    <div id="attendanceStatusSaving"></div>
+  </section>
+</div>
+
+<div id="attendanceMultiBar" aria-hidden="true">
+  <button class="att-multi-action cancel" id="attendanceMultiCancel" type="button">Hủy</button>
+  <div id="attendanceMultiCount">0 ngày</div>
+  <button class="att-multi-action p" data-multi-status="P" type="button">Phép</button>
+  <button class="att-multi-action o" data-multi-status="O" type="button">OFF</button>
+  <button class="att-multi-action t" data-multi-status="T" type="button">OT</button>
+  <button class="att-multi-action q" data-multi-status="Q" type="button">Quên</button>
+  <button class="att-multi-action x" data-multi-status="X" type="button">X</button>
+  <button class="att-multi-action clear" data-multi-status="" type="button">Xóa</button>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/attendance.js"></script>
 </body>
 </html>
