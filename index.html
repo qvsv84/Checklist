@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f8f1">
+<title>Đảo Mèo</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ MÀN 1: ĐĂNG NHẬP ============ -->
+<section id="loginScreen" class="screen screen--active">
+  <div class="login-wrap">
+
+    <header class="login-header">
+      <h1 class="login-title">🐱 ĐẢO MÈO</h1>
+      <p class="login-sub">Chọn tên của bạn để tiếp tục</p>
+    </header>
+
+    <div class="wheel-area" id="wheelArea">
+      <div class="wheel-viewport" id="wheelViewport">
+        <div class="wheel-selection"></div>
+        <div class="wheel-items" id="wheelItems"></div>
+      </div>
+      <p class="wheel-hint">Vuốt lên / xuống để chọn</p>
+    </div>
+
+    <button id="loginBtn" class="btn btn--primary" type="button" disabled>
+      Đăng nhập
+    </button>
+
+    <p id="loginStatus" class="login-status"></p>
+  </div>
+</section>
+
+<!-- ============ MÀN 2: TRANG CÁ NHÂN ============ -->
+<section id="profileScreen" class="screen">
+  <div class="profile-wrap">
+
+    <header class="profile-header">
+      <button id="logoutBtn" class="btn btn--ghost btn--sm" type="button">← Đăng xuất</button>
+      <span class="profile-brand">🐱 Đảo Mèo</span>
+    </header>
+
+    <div class="profile-card">
+      <div class="avatar" id="profileAvatar">?</div>
+      <h2 class="profile-name" id="profileName">—</h2>
+      <p class="profile-subtitle">Trang cá nhân</p>
+
+      <!-- ============================================
+           CHỖ NÀY ĐỂ BỔ SUNG SAU
+           Ví dụ: điểm, check-in, lịch sử, nút...
+           ============================================ -->
+      <div class="profile-content" id="profileContent">
+        <p class="profile-placeholder">
+          Nội dung trang cá nhân sẽ được bổ sung sau.
+        </p>
+      </div>
+      <!-- ============================================ -->
+
+    </div>
+
+  </div>
+</section>
+
+<script src="js/app.js"></script>
+</body>
+</html>
