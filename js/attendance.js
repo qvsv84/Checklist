@@ -19,6 +19,17 @@
   const attendanceSyncBtn = document.getElementById('attendanceSyncBtn');
   const attendanceSyncStatus = document.getElementById('attendanceSyncStatus');
   if(!page || !employee || !grid) return;
+  function attendanceRankClient(value){
+    const score = Number(value) || 0;
+    if(score >= 700) return "VIP";
+    if(score >= 600) return "SSS";
+    if(score >= 500) return "SS";
+    if(score >= 400) return "S";
+    if(score >= 300) return "A";
+    if(score >= 200) return "B";
+    if(score >= 100) return "C";
+    return "D";
+  }
 
   let ATTENDANCE_EMPLOYEES = [];
 
