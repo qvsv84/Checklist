@@ -1,5 +1,6 @@
 /* =========================================================
    ĐẢO MÈO — GIAO DIỆN XANH MÁT
+   Design system: mobile-first, soft mint, rounded
    ========================================================= */
 
 :root{
@@ -12,6 +13,7 @@
   --green-dark:    #3a7a56;
   --green-soft:    #e5f3e7;
   --line:          #d4e1d3;
+  --yellow:        #efd48a;
   --shadow:        0 18px 50px rgba(42,78,57,.10);
   --shadow-sm:     0 8px 22px rgba(42,78,57,.08);
   --radius-lg:     28px;
@@ -29,12 +31,13 @@ html, body{
   background: var(--bg);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow: hidden;
 }
 
 button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
 
-/* ---------- Screen switching ---------- */
+/* ---------- Chuyển màn hình ---------- */
 .screen{
   position: fixed;
   inset: 0;
@@ -55,9 +58,12 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   justify-content: center;
   padding: 24px 18px;
   background:
-    radial-gradient(circle at 50% 12%, rgba(255,255,255,.98), transparent 32%),
-    radial-gradient(circle at 12% 82%, rgba(190,225,198,.30), transparent 30%),
-    radial-gradient(circle at 90% 65%, rgba(218,237,221,.35), transparent 30%),
+    /* Đốm nắng mờ */
+    radial-gradient(circle at 20% 15%, rgba(255,255,255,.95), transparent 30%),
+    radial-gradient(circle at 82% 28%, rgba(239,212,138,.18), transparent 25%),
+    radial-gradient(circle at 15% 82%, rgba(190,225,198,.35), transparent 32%),
+    radial-gradient(circle at 88% 88%, rgba(218,237,221,.40), transparent 30%),
+    /* Nền chính */
     linear-gradient(180deg, #f8fbf7 0%, #f1f7ef 55%, #eaf3e8 100%);
 }
 
@@ -69,27 +75,36 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   gap: 26px;
 }
 
+/* ---------- Tiêu đề ---------- */
 .login-header{
   text-align: center;
 }
 
 .login-title{
+  position: relative;
+  display: inline-block;
   font-size: clamp(30px, 8vw, 44px);
   font-weight: 950;
   letter-spacing: -.045em;
   color: var(--ink);
-  line-height: 1.05;
+  line-height: 1.1;
   text-shadow: 0 2px 0 rgba(255,255,255,.9), 0 8px 22px rgba(42,91,65,.10);
+  padding-bottom: 12px;
 }
 
-.login-title::after{
-  content: "";
-  display: block;
+.login-title .cat{
+  display: inline-block;
+  filter: drop-shadow(0 4px 6px rgba(42,78,57,.14));
+}
+
+/* Nét gạch chân vàng dạng "vẽ tay" */
+.title-underline{
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  transform: translateX(-50%);
   width: 130px;
-  height: 6px;
-  margin: 10px auto 0;
-  border-radius: 99px;
-  background: linear-gradient(90deg, transparent, #efd48a 20%, #efd48a 80%, transparent);
+  height: 12px;
   opacity: .9;
 }
 
@@ -126,6 +141,7 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   -webkit-user-select: none;
 }
 
+/* Fade mờ trên & dưới wheel */
 .wheel-viewport::before,
 .wheel-viewport::after{
   content: "";
@@ -144,6 +160,7 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   background: linear-gradient(0deg, rgba(255,255,255,.95), transparent);
 }
 
+/* Đường kẻ xanh trên + dưới tên đang chọn */
 .wheel-selection{
   position: absolute;
   left: 14px; right: 14px;
@@ -156,6 +173,35 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   background: rgba(79,155,112,.07);
   z-index: 2;
   pointer-events: none;
+}
+
+/* Vệt sáng chạy qua khi wheel dừng — thêm tự động bằng JS */
+.wheel-shine{
+  position: absolute;
+  left: 14px; right: 14px;
+  top: 50%;
+  height: 58px;
+  transform: translateY(-50%);
+  border-radius: 14px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(239,212,138,.0) 20%,
+    rgba(239,212,138,.35) 50%,
+    rgba(239,212,138,.0) 80%,
+    transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.wheel-shine.flash{
+  animation: shineFlash .7s ease-out;
+}
+
+@keyframes shineFlash{
+  0%   { opacity: 0; transform: translateY(-50%) translateX(-40px); }
+  40%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-50%) translateX(40px); }
 }
 
 .wheel-items{
@@ -192,7 +238,7 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   letter-spacing: .02em;
 }
 
-/* ---------- Buttons ---------- */
+/* ---------- Nút ---------- */
 .btn{
   display: inline-flex;
   align-items: center;
@@ -205,33 +251,54 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   letter-spacing: .12em;
   transition: transform .18s ease, box-shadow .18s ease,
               background .18s ease, color .18s ease, opacity .18s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* Nút chính — có highlight + bóng khối */
 .btn--primary{
+  position: relative;
   min-width: 200px;
-  color: #fff;
-  background: linear-gradient(180deg,-content #5aad7:f 0%, # center4a9a6c 100;
-%);
-  box-shadow :
-    0 12px 28px font -8px rgba(74,154,108,.42),
-    0 4px 10px -2px rgba(42,78,57,.14),
-    inset 0 1px 0 rgba(255,255,255,.30);
+  color: #ffffff;
+  background: linear-gradient(180deg, #5aad7f 0%, #4a9a6c 100%);
+  box-shadow:
+    0 12px 28px -8px rgba(74,154,108,.55),
+    0 4px 10px -2px rgba(42,78,57,.18),
+    inset 0 1px 0 rgba(255,255,255,.45),   /* highlight trên */
+    inset 0 -2px 4px rgba(42,78,57,.15);   /* bóng dưới trong */
+  overflow: hidden;
+}
+
+/* Highlight chạy qua khi hover (desktop) */
+.btn--primary::after{
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  transition: left .6s ease;
 }
 
 .btn--primary:not(:disabled):hover{
   transform: translateY(-2px);
   box-shadow:
-    0 18px 36px -8px rgba(74,154,108,.52),
-    0 6px 14px -2px rgba(42,78,57,.18),
-    inset 0 1px 0 rgba(255,255,255,.35);
+    0 18px 36px -8px rgba(74,154,108,.62),
+    0 6px 14px -2px rgba(42,78,57,.22),
+    inset 0 1px 0 rgba(255,255,255,.5),
+    inset 0 -2px 4px rgba(42,78,57,.15);
+}
+.btn--primary:not(:disabled):hover::after{
+  left: 100%;
 }
 
 .btn--primary:not(:disabled):active{
-  transform: translateY(0) scale(.98);
+  transform: translateY(0) scale(.97);
+  box-shadow:
+    0 6px 14px -4px rgba(74,154,108,.45),
+    inset 0 2px 6px rgba(42,78,57,.20);
 }
 
 .btn--primary:disabled{
-  opacity: .45;
+  opacity: .4;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -242,9 +309,8 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   border: 1px solid var(--line);
   box-shadow: var(--shadow-sm);
 }
-
 .btn--ghost:active{
-  transform: scale(.97);
+  transform: scale(.96);
 }
 
 .btn--sm{
@@ -254,6 +320,7 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   letter-spacing: .06em;
 }
 
+/* ---------- Trạng thái ---------- */
 .login-status{
   min-height: 18px;
   font-size: 12px;
@@ -283,6 +350,8 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   display: flex;
   flex-direction: column;
   gap: 18px;
+  padding-top: 4px;
+  padding-bottom: 24px;
 }
 
 .profile-header{
@@ -300,16 +369,30 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
 }
 
 .profile-card{
-  background: rgba(255,255,255,.96);
+  background: rgba(255,255,255,.98);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
-  padding: 32px 24px 28px;
+  padding: 34px 24px 28px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  animation: cardIn .45s cubic-bezier(.16,.9,.25,1);
+}
+
+@keyframes cardIn{
+  0%   { opacity: 0; transform: translateY(12px) scale(.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Vòng sáng quanh avatar — viền nhấp nháy nhẹ khi vào */
+.avatar-ring{
+  position: relative;
+  padding: 4px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(90,173,127,.25), rgba(239,212,138,.30));
 }
 
 .avatar{
@@ -318,14 +401,21 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   border-radius: 50%;
   display: flex;
   align-items: center;
-  justify-size: 36px;
+  justify-content: center;
+  font-size: 38px;
   font-weight: 950;
-  color: #fff;
+  color: #ffffff;
   background: linear-gradient(145deg, #5aad7f, #4a9a6c);
   box-shadow:
     0 14px 30px -10px rgba(74,154,108,.55),
-    inset 0 2px 0 rgba(255,255,255,.30);
+    inset 0 2px 0 rgba(255,255,255,.35),
+    inset 0 -3px 6px rgba(42,78,57,.18);
   letter-spacing: -.02em;
+  text-shadow: 0 2px 4px rgba(42,78,57,.20);
+  /* Căn giữa tuyệt đối */
+  line-height: 1;
+  padding-top: 4px; /* cân quang học do chữ hoa không có đuôi */
+  box-sizing: border-box;
 }
 
 .profile-name{
@@ -333,17 +423,18 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   font-weight: 950;
   color: var(--ink);
   letter-spacing: -.03em;
-  line-height: 1.1;
+  line-height: 1.15;
   word-break: break-word;
+  max-width: 100%;
 }
 
 .profile-subtitle{
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   color: var(--muted);
-  letter-spacing: .16em;
+  letter-spacing: .22em;
   text-transform: uppercase;
-  margin-top: -8px;
+  margin-top: -6px;
 }
 
 .profile-content{
@@ -366,10 +457,14 @@ button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
   .wheel-viewport{ height: 240px; }
   .wheel-item{ font-size: 17px; }
   .wheel-item.selected{ font-size: 19px; }
-  .avatar{ width: 76px; height: 76px; font-size: 30px; }
+  .avatar{ width: 76px; height: 76px; font-size: 32px; }
+  .profile-card{ padding: 28px 20px 22px; }
 }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
-  *{ transition: none !important; animation: none !important; }
+  *, *::before, *::after{
+    transition: none !important;
+    animation: none !important;
+  }
 }
