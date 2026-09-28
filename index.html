@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f3f8f1">
 <title>Đảo Mèo</title>
+
+<!-- Tăng tốc kết nối tới Google Apps Script -->
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://script.googleusercontent.com">
+
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -19,14 +26,13 @@
       <h1 class="login-title">
         <span class="cat">🐱</span> ĐẢO MÈO
         <svg class="title-underline" viewBox="0 0 130 12" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M2,8 Q30,2 65,6 T128,5" 
+          <path d="M2,8 Q30,2 65,6 T128,5"
                 fill="none" stroke="#efd48a" stroke-width="4" stroke-linecap="round"/>
         </svg>
       </h1>
       <p class="login-sub">Chọn tên của bạn để tiếp tục</p>
     </header>
 
-    <!-- Wheel chọn tên -->
     <div class="wheel-area">
       <div class="wheel-viewport" id="wheelViewport">
         <div class="wheel-selection"></div>
@@ -61,18 +67,224 @@
       </div>
       <h2 class="profile-name" id="profileName">—</h2>
       <p class="profile-subtitle">TRANG CÁ NHÂN</p>
+    </div>
 
-      <!-- ============================================
-           CHỖ NÀY ĐỂ BỔ SUNG SAU
-           (điểm, check-in, lịch sử...)
-           ============================================ -->
-      <div class="profile-content" id="profileContent">
-        <p class="profile-placeholder">
-          Nội dung trang cá nhân sẽ được bổ sung sau.
-        </p>
+    <div class="menu-card">
+      <p class="menu-label">MENU</p>
+
+      <!-- Mỗi nút menu: tiêu đề + mô tả nhỏ + mũi tên -->
+      <button class="menu-item" type="button" data-page="checklist">
+        <span class="menu-icon">☑</span>
+        <span class="menu-text">
+          <span class="menu-title">Checklist</span>
+          <span class="menu-desc">Xem và check-in hàng ngày</span>
+        </span>
+        <span class="menu-arrow">→</span>
+      </button>
+
+      <button class="menu-item" type="button" data-page="kdv">
+        <span class="menu-icon">📜</span>
+        <span class="menu-text">
+          <span class="menu-title">Luật KDV</span>
+          <span class="menu-desc">12 quy định kiểm duyệt</span>
+        </span>
+        <span class="menu-arrow">→</span>
+      </button>
+
+      <button class="menu-item" type="button" data-page="attendance">
+        <span class="menu-icon">🗓</span>
+        <span class="menu-text">
+          <span class="menu-title">Chấm công</span>
+          <span class="menu-desc">Lịch làm việc tháng này</span>
+        </span>
+        <span class="menu-arrow">→</span>
+      </button>
+
+      <button class="menu-item" type="button" data-page="top">
+        <span class="menu-icon">🏆</span>
+        <span class="menu-text">
+          <span class="menu-title">BXH TOP</span>
+          <span class="menu-desc">Xếp hạng theo điểm chấm công</span>
+        </span>
+        <span class="menu-arrow">→</span>
+      </button>
+
+      <button class="menu-item" type="button" data-page="lunch">
+        <span class="menu-icon">🍜</span>
+        <span class="menu-text">
+          <span class="menu-title">Bữa trưa</span>
+          <span class="menu-desc">Hôm nay ăn gì?</span>
+        </span>
+        <span class="menu-arrow">→</span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     MÀN 3 — CHECKLIST (check-in được)
+     ============================================================ -->
+<section id="checklistScreen" class="screen">
+  <div class="page-wrap">
+    <header class="page-header">
+      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
+      <h2 class="page-title">☑ Checklist hôm nay</h2>
+      <button id="checklistSyncBtn" class="btn btn--ghost btn--sm" type="button" title="Đồng bộ lại">↻</button>
+    </header>
+
+    <div class="checklist-card">
+      <table class="checklist-table" id="checklistTable">
+        <thead>
+          <tr>
+            <th>Người chơi</th>
+            <th>Giờ</th>
+            <th class="col-status">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody id="checklistBody">
+          <!-- Skeleton sẽ được JS render -->
+        </tbody>
+      </table>
+    </div>
+    <p id="checklistStatus" class="page-status"></p>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÀN 4 — LUẬT KDV (12 luật)
+     ============================================================ -->
+<section id="kdvScreen" class="screen">
+  <div class="page-wrap">
+    <header class="page-header">
+      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
+      <h2 class="page-title">📜 Luật KDV</h2>
+      <span style="width:70px"></span>
+    </header>
+
+    <p class="page-sub">Quy định duyệt bài • Đọc kỹ trước khi kiểm duyệt</p>
+
+    <div class="kdv-list">
+      <article class="kdv-item"><span class="kdv-num">01</span><div>Cấm đăng video có logo <b>(TIKTOK, DOUYIN,...)</b></div></article>
+      <article class="kdv-item"><span class="kdv-num">02</span><div>Cấm đăng video có <b>NHẠC NƯỚC NGOÀI</b></div></article>
+      <article class="kdv-item"><span class="kdv-num">03</span><div>Cấm các hình ảnh chứa <b>BỘ PHẬN NHẠY CẢM</b> của người, động vật</div></article>
+      <article class="kdv-item"><span class="kdv-num">04</span><div>Cấm <b>MUA - BÁN - CHO - TẶNG</b> dưới mọi hình thức</div></article>
+      <article class="kdv-item"><span class="kdv-num">05</span><div>Cấm các hình ảnh <b>NUÔI NHỐT - HÀNH HẠ - NGƯỢC ĐÃI ĐỘNG VẬT</b></div></article>
+      <article class="kdv-item"><span class="kdv-num">06</span><div>Cấm các hình ảnh <b>THUỐC SÚNG, MA TUÝ, THUỐC PHIỆN, CẦN SA</b></div></article>
+      <article class="kdv-item"><span class="kdv-num">07</span><div>Cấm các bài viết về <b>TÔN GIÁO, CHÍNH TRỊ, THÙ HẰN</b></div></article>
+      <article class="kdv-item"><span class="kdv-num">08</span><div>Các bài <b>PHỐT</b> đều phải thông qua <b>ADMIN</b> kiểm duyệt mới được đăng</div></article>
+      <article class="kdv-item"><span class="kdv-num">09</span><div><b>KHÔNG LIVE STREAM</b> khi chưa được <b>ADMIN</b> cho phép</div></article>
+      <article class="kdv-item"><span class="kdv-num">10</span><div><b>KHÔNG XOÁ BÀI</b> khi bài không vi phạm các quy định trên</div></article>
+      <article class="kdv-item"><span class="kdv-num">11</span><div><b>KHÔNG BÁN HÀNG</b> dưới mọi hình thức, phải đăng ký qua <b>ADMIN</b></div></article>
+      <article class="kdv-item"><span class="kdv-num">12</span><div><b>KHÔNG BẬT TÍNH NĂNG PHÊ DUYỆT TRƯỚC</b> cho người khác</div></article>
+    </div>
+
+    <p class="kdv-footer">♡ Kiểm duyệt đúng luật • Công bằng • Rõ ràng ♡</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÀN 5 — CHẤM CÔNG
+     ============================================================ -->
+<section id="attendanceScreen" class="screen">
+  <div class="page-wrap">
+    <header class="page-header">
+      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
+      <h2 class="page-title">🗓 Chấm công</h2>
+      <button id="attendanceSyncBtn" class="btn btn--ghost btn--sm" type="button" title="Đồng bộ lại">↻</button>
+    </header>
+
+    <div class="att-picker">
+      <label class="att-label" for="attendanceEmployee">Nhân viên</label>
+      <select id="attendanceEmployee"></select>
+    </div>
+
+    <div class="att-month-nav">
+      <button id="attendancePrev" class="btn btn--ghost btn--sm" type="button">‹</button>
+      <div id="attendanceMonthLabel" class="att-month-text">Tháng 9</div>
+      <button id="attendanceNext" class="btn btn--ghost btn--sm" type="button">›</button>
+    </div>
+
+    <div class="att-calendar">
+      <div class="att-week">
+        <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
       </div>
-      <!-- ============================================ -->
+      <div id="attendanceGrid" class="att-grid"></div>
+    </div>
 
+    <div class="att-summary">
+      <div class="att-stat"><strong id="attendanceWorkCount">0</strong><span>Ngày làm</span></div>
+      <div class="att-stat"><strong id="attendanceOffCount">0</strong><span>Ngày nghỉ</span></div>
+      <div class="att-stat"><strong id="attendanceLeaveCount">0</strong><span>Nghỉ phép</span></div>
+    </div>
+
+    <p id="attendanceStatus" class="page-status"></p>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÀN 6 — BXH TOP
+     ============================================================ -->
+<section id="topScreen" class="screen">
+  <div class="page-wrap">
+    <header class="page-header">
+      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
+      <h2 class="page-title">🏆 BXH TOP</h2>
+      <button id="topSyncBtn" class="btn btn--ghost btn--sm" type="button" title="Đồng bộ lại">↻</button>
+    </header>
+
+    <div class="top-month-bar">
+      <select id="topMonthSelect"></select>
+    </div>
+
+    <div class="top-card">
+      <table class="top-table">
+        <thead>
+          <tr><th>#</th><th>Tên</th><th>⭐ Điểm</th><th>Rank</th></tr>
+        </thead>
+        <tbody id="topBody"></tbody>
+      </table>
+    </div>
+    <p id="topStatus" class="page-status"></p>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÀN 7 — BỮA TRƯA
+     ============================================================ -->
+<section id="lunchScreen" class="screen">
+  <div class="page-wrap">
+    <header class="page-header">
+      <button class="btn btn--ghost btn--sm back-btn" type="button" data-back>← Quay lại</button>
+      <h2 class="page-title">🍜 Bữa trưa</h2>
+      <span style="width:70px"></span>
+    </header>
+
+    <div class="lunch-result-card">
+      <p class="lunch-result-label">Thực đơn hôm nay</p>
+      <div id="lunchResultBody">
+        <p class="lunch-placeholder">Chọn kiểu ăn bên dưới để quay món 🎲</p>
+      </div>
+      <button id="lunchRerollBtn" class="btn btn--primary btn--sm" type="button" style="display:none;margin-top:14px">🎲 Quay lại</button>
+    </div>
+
+    <p class="menu-label" style="margin-top:20px">CHỌN KIỂU ĂN</p>
+    <div class="lunch-mode-grid">
+      <button class="lunch-mode-btn home" type="button" data-mode="home">
+        <span class="lunch-mode-icon">🏠</span>
+        <span class="lunch-mode-title">Ăn tại nhà</span>
+        <span class="lunch-mode-desc">Món mặn + canh</span>
+      </button>
+      <button class="lunch-mode-btn out" type="button" data-mode="out">
+        <span class="lunch-mode-icon">🍜</span>
+        <span class="lunch-mode-title">Ăn ngoài</span>
+        <span class="lunch-mode-desc">Quán, hàng ăn</span>
+      </button>
+      <button class="lunch-mode-btn all" type="button" data-mode="all">
+        <span class="lunch-mode-icon">🎲</span>
+        <span class="lunch-mode-title">Ngẫu nhiên</span>
+        <span class="lunch-mode-desc">Nhà hoặc ngoài</span>
+      </button>
     </div>
   </div>
 </section>
