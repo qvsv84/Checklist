@@ -9,6 +9,16 @@
 <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link rel="dns-prefetch" href="https://script.google.com">
 <link rel="dns-prefetch" href="https://script.googleusercontent.com">
+<!-- ===== Preload file tĩnh để load nhanh hơn ===== -->
+<link rel="preload" href="css/base.css" as="style">
+<link rel="preload" href="js/main.js" as="script">
+<link rel="preload" href="js/attendance.js" as="script">
+<!-- ===== PWA manifest + iOS meta tags ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Đảo Mèo">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%234e9d6b'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle' fill='white' font-family='Arial'%3E🐱%3C/text%3E%3C/svg%3E">
 <title>S Rank — Daily Mission</title>
 <link rel="stylesheet" href="css/base.css">
 </head>
@@ -428,5 +438,12 @@
 
 <script src="js/main.js"></script>
 <script src="js/attendance.js"></script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+  });
+}
+</script>
 </body>
 </html>
