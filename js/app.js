@@ -6,7 +6,7 @@
   "use strict";
 
   // ====== CẤU HÌNH ======
-  // Dán URL Apps Script của bạn vào đây (giữ nguyên URL cũ nếu còn chạy)
+  // URL Apps Script — nếu cần đổi, sửa dòng này
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJ1ebyNNe7fxlNR6TObBYebp7zRORGZTO0kTzlFl-S39I2vIJjDx9h0quV84od9JAfeg/exec";
 
   const ITEM_H = 58;        // chiều cao 1 dòng trong wheel (khớp CSS)
@@ -18,6 +18,7 @@
 
   const wheelViewport = document.getElementById("wheelViewport");
   const wheelItems    = document.getElementById("wheelItems");
+  const wheelShine    = document.getElementById("wheelShine");
   const loginBtn      = document.getElementById("loginBtn");
   const loginStatus   = document.getElementById("loginStatus");
 
@@ -119,13 +120,25 @@
     }
   }
 
+  // Vệt sáng vàng chạy qua khi wheel dừng lại
+  function flashShine(){
+    if(!wheelShine) return;
+    wheelShine.classList.remove("flash");
+    void wheelShine.offsetWidth; // force reflow để restart animation
+    wheelShine.classList.add("flash");
+  }
+
   function snapWheel(){
     const steps = Math.round(-dragOffset / ITEM_H);
+    let changed = false;
     if(steps !== 0){
-      current = Math.max(0, Math.min(names.length - 1, current + steps));
+      const next = Math.max(0, Math.min(names.length - 1, current + steps));
+      if(next !== current) changed = true;
+      current = next;
     }
     dragOffset = 0;
     renderWheel();
+    if(changed) flashShine();
   }
 
   // ---- Pointer events (mobile + desktop) ----
@@ -161,15 +174,19 @@
     wheelViewport.releasePointerCapture?.(e.pointerId);
   });
 
-  // ---- Wheel chuột ----
+  // ---- Lăn chuột (desktop) ----
   wheelViewport.addEventListener("wheel", (e) => {
     if(!names.length) return;
     e.preventDefault();
     if(!e.deltaY) return;
-    current = Math.max(0, Math.min(names.length - 1,
+    const next = Math.max(0, Math.min(names.length - 1,
       current + (e.deltaY > 0 ? 1 : -1)));
-    dragOffset = 0;
-    renderWheel();
+    if(next !== current){
+      current = next;
+      dragOffset = 0;
+      renderWheel();
+      flashShine();
+    }
   }, { passive: false });
 
   // ---- Bàn phím ----
@@ -179,14 +196,22 @@
 
     if(e.key === "ArrowDown"){
       e.preventDefault();
-      current = Math.min(names.length - 1, current + 1);
-      dragOffset = 0;
-      renderWheel();
+      const next = Math.min(names.length - 1, current + 1);
+      if(next !== current){
+        current = next;
+        dragOffset = 0;
+        renderWheel();
+        flashShine();
+      }
     } else if(e.key === "ArrowUp"){
       e.preventDefault();
-      current = Math.max(0, current - 1);
-      dragOffset = 0;
-      renderWheel();
+      const next = Math.max(0, current - 1);
+      if(next !== current){
+        current = next;
+        dragOffset = 0;
+        renderWheel();
+        flashShine();
+      }
     } else if(e.key === "Enter" && !loginBtn.disabled){
       e.preventDefault();
       loginBtn.click();
@@ -194,7 +219,7 @@
   });
 
   // =========================================================
-  // LOAD DANH SÁCH TÊN từ Sheet
+  // LOAD DANH SÁCH TÊN từ Google Sheet
   // =========================================================
   function setLoginStatus(text, type = ""){
     loginStatus.textContent = text || "";
@@ -244,6 +269,9 @@
     loginScreen.classList.remove("screen--active");
     profileScreen.classList.add("screen--active");
     document.title = "Trang cá nhân của " + name;
+
+    // Cuộn lên đầu trang cá nhân
+    profileScreen.scrollTop = 0;
   }
 
   function logout(){
