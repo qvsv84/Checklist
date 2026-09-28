@@ -28,7 +28,7 @@ border-top:1px solid rgba(90,168,120,.6);border-bottom:1px solid rgba(90,168,120
 background:rgba(90,168,120,.055);border-radius:14px;z-index:3;pointer-events:none}
 #items{position:absolute;left:0;right:0;top:0;height:100%}
 .item{position:absolute;left:0;right:0;height:58px;display:flex;align-items:center;justify-content:center;
-color:rgba(255,255,255,.22);font-size:21px,;font-weight:650;transform-origin:center;user-select:none}
+color:rgba(255,255,255,.22);font-size:21px;font-weight:650;transform-origin:center;user-select:none}
 .item.selected{color:#fff;text-shadow:0 0 6px #fff,0 0 17px #5aa878,0 0 35px #5aa878}
 #wheelHint{position:absolute;bottom:-31px;left:50%;transform:translateX(-50%);
 color:rgba(255,255,255,.38);font-size:12px;white-space:nowrap}
@@ -40,7 +40,7 @@ box-shadow:0 0 20px rgba(78,157,107,.45);opacity:0;pointer-events:none;transitio
 
 #message{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
 padding:25px;text-align:center;pointer-events:none;color:#fff;font-weight:800;
-font-size:clamp(28px7.5vw,62px);line-height:1.12;text-shadow:0 0 8px #fff,0 0 25px #5aa878,0 0 65px #5aa878;
+font-size:clamp(28px,7.5vw,62px);line-height:1.12;text-shadow:0 0 8px #fff,0 0 25px #5aa878,0 0 65px #5aa878;
 opacity:0;transform:scale(.6)}
 #message.show{animation:messageIn .75s cubic-bezier(.16,.9,.25,1) forwards}
 @keyframes messageIn{0%{opacity:0;transform:scale(.35);filter:blur(12px)}
