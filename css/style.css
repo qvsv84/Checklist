@@ -1,0 +1,375 @@
+/* =========================================================
+   ĐẢO MÈO — GIAO DIỆN XANH MÁT
+   ========================================================= */
+
+:root{
+  --bg:            #f3f8f1;
+  --surface:       #ffffff;
+  --ink:           #245943;
+  --ink-soft:      #557164;
+  --muted:         #83968b;
+  --green:         #4f9b70;
+  --green-dark:    #3a7a56;
+  --green-soft:    #e5f3e7;
+  --line:          #d4e1d3;
+  --shadow:        0 18px 50px rgba(42,78,57,.10);
+  --shadow-sm:     0 8px 22px rgba(42,78,57,.08);
+  --radius-lg:     28px;
+  --radius-md:     18px;
+  --radius-pill:   999px;
+  --font: ui-rounded, "SF Pro Rounded", "Avenir Next",
+          system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+*{ box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body{
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button{ font-family: inherit; cursor: pointer; border: 0; background: none; }
+
+/* ---------- Screen switching ---------- */
+.screen{
+  position: fixed;
+  inset: 0;
+  display: none;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.screen--active{
+  display: flex;
+  opacity: 1;
+}
+
+/* =========================================================
+   MÀN 1 — ĐĂNG NHẬP
+   ========================================================= */
+#loginScreen{
+  align-items: center;
+  justify-content: center;
+  padding: 24px 18px;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,.98), transparent 32%),
+    radial-gradient(circle at 12% 82%, rgba(190,225,198,.30), transparent 30%),
+    radial-gradient(circle at 90% 65%, rgba(218,237,221,.35), transparent 30%),
+    linear-gradient(180deg, #f8fbf7 0%, #f1f7ef 55%, #eaf3e8 100%);
+}
+
+.login-wrap{
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+.login-header{
+  text-align: center;
+}
+
+.login-title{
+  font-size: clamp(30px, 8vw, 44px);
+  font-weight: 950;
+  letter-spacing: -.045em;
+  color: var(--ink);
+  line-height: 1.05;
+  text-shadow: 0 2px 0 rgba(255,255,255,.9), 0 8px 22px rgba(42,91,65,.10);
+}
+
+.login-title::after{
+  content: "";
+  display: block;
+  width: 130px;
+  height: 6px;
+  margin: 10px auto 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, transparent, #efd48a 20%, #efd48a 80%, transparent);
+  opacity: .9;
+}
+
+.login-sub{
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ---------- Wheel ---------- */
+.wheel-area{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.wheel-viewport{
+  position: relative;
+  width: 100%;
+  height: 260px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.96) 0%,
+    rgba(248,252,246,.94) 50%,
+    rgba(255,255,255,.96) 100%);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wheel-viewport::before,
+.wheel-viewport::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 60px;
+  pointer-events: none;
+  z-index: 3;
+}
+.wheel-viewport::before{
+  top: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.95), transparent);
+}
+.wheel-viewport::after{
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(255,255,255,.95), transparent);
+}
+
+.wheel-selection{
+  position: absolute;
+  left: 14px; right: 14px;
+  top: 50%;
+  height: 58px;
+  transform: translateY(-50%);
+  border-top: 1.5px solid rgba(79,155,112,.55);
+  border-bottom: 1.5px solid rgba(79,155,112,.55);
+  border-radius: 14px;
+  background: rgba(79,155,112,.07);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.wheel-items{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.wheel-item{
+  position: absolute;
+  left: 0; right: 0;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  font-weight: 800;
+  color: rgba(36,89,67,.28);
+  transition: color .15s ease;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.wheel-item.selected{
+  color: var(--ink);
+  font-weight: 950;
+  font-size: 21px;
+}
+
+.wheel-hint{
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .02em;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 12px 32px;
+  border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-weight: 950;
+  letter-spacing: .12em;
+  transition: transform .18s ease, box-shadow .18s ease,
+              background .18s ease, color .18s ease, opacity .18s ease;
+}
+
+.btn--primary{
+  min-width: 200px;
+  color: #fff;
+  background: linear-gradient(180deg,-content #5aad7:f 0%, # center4a9a6c 100;
+%);
+  box-shadow :
+    0 12px 28px font -8px rgba(74,154,108,.42),
+    0 4px 10px -2px rgba(42,78,57,.14),
+    inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+.btn--primary:not(:disabled):hover{
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 36px -8px rgba(74,154,108,.52),
+    0 6px 14px -2px rgba(42,78,57,.18),
+    inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+.btn--primary:not(:disabled):active{
+  transform: translateY(0) scale(.98);
+}
+
+.btn--primary:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn--ghost{
+  color: var(--ink-soft);
+  background: rgba(255,255,255,.85);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--ghost:active{
+  transform: scale(.97);
+}
+
+.btn--sm{
+  min-height: 40px;
+  padding: 8px 18px;
+  font-size: 12px;
+  letter-spacing: .06em;
+}
+
+.login-status{
+  min-height: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+}
+.login-status.error{ color: #b34a4a; }
+.login-status.ok{ color: var(--green-dark); }
+
+/* =========================================================
+   MÀN 2 — TRANG CÁ NHÂN
+   ========================================================= */
+#profileScreen{
+  align-items: flex-start;
+  justify-content: center;
+  padding: 22px 18px;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 80% 8%, rgba(255,255,255,.95), transparent 30%),
+    radial-gradient(circle at 10% 90%, rgba(190,225,198,.28), transparent 32%),
+    linear-gradient(180deg, #f8fbf7 0%, #eff6ee 100%);
+}
+
+.profile-wrap{
+  width: min(100%, 480px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.profile-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-brand{
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--ink-soft);
+  letter-spacing: .02em;
+}
+
+.profile-card{
+  background: rgba(255,255,255,.96);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 32px 24px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar{
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-size: 36px;
+  font-weight: 950;
+  color: #fff;
+  background: linear-gradient(145deg, #5aad7f, #4a9a6c);
+  box-shadow:
+    0 14px 30px -10px rgba(74,154,108,.55),
+    inset 0 2px 0 rgba(255,255,255,.30);
+  letter-spacing: -.02em;
+}
+
+.profile-name{
+  font-size: clamp(22px, 6vw, 28px);
+  font-weight: 950;
+  color: var(--ink);
+  letter-spacing: -.03em;
+  line-height: 1.1;
+  word-break: break-word;
+}
+
+.profile-subtitle{
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-top: -8px;
+}
+
+.profile-content{
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--line);
+}
+
+.profile-placeholder{
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  padding: 14px 8px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 380px){
+  .wheel-viewport{ height: 240px; }
+  .wheel-item{ font-size: 17px; }
+  .wheel-item.selected{ font-size: 19px; }
+  .avatar{ width: 76px; height: 76px; font-size: 30px; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; animation: none !important; }
+}
