@@ -1667,15 +1667,34 @@
       `;
     }
 
+    const totalChecked = checked.filter(Boolean).length;
+    const totalPlayers = names.length;
+    const percent = totalPlayers > 0 ? Math.round((totalChecked / totalPlayers) * 100) : 0;
+
+    const statsHTML = `
+      <div class="landing-stats">
+        <div class="landing-stat-item">
+          <span class="landing-stat-value">${totalChecked}/${totalPlayers}</span>
+          <span class="landing-stat-label">Đã check</span>
+        </div>
+        <div class="landing-stat-progress">
+          <div class="landing-stat-progress-fill" style="width:${percent}%"></div>
+        </div>
+        <div class="landing-stat-item">
+          <span class="landing-stat-value">${percent}%</span>
+          <span class="landing-stat-label">Hoàn thành</span>
+        </div>
+      </div>
+    `;
+
     question.innerHTML = locked
-      ? `<span class="landing-title">CHECKLIST ĐẢO MÈO</span>${top3HTML}<span class="landing-cta locked" role="button" aria-disabled="true" tabindex="-1">Tạm khoá Checklist</span><span class="landing-lock-note">Sau ${checklistLockTime} sẽ khoá Checklist nha mn 🥰</span>`
-      : `<span class="landing-title">CHECKLIST ĐẢO MÈO</span>${top3HTML}<span class="landing-cta" role="button" tabindex="0">CLICK HERE</span>`;
+      ? `<span class="landing-title">CHECKLIST ĐẢO MÈO</span>${top3HTML}${statsHTML}<span class="landing-cta locked" role="button" aria-disabled="true" tabindex="-1">Tạm khoá Checklist</span><span class="landing-lock-note">Sau ${checklistLockTime} sẽ khoá Checklist nha mn 🥰</span>`
+      : `<span class="landing-title">CHECKLIST ĐẢO MÈO</span>${top3HTML}${statsHTML}<span class="landing-cta" role="button" tabindex="0">CLICK HERE</span>`;
 
     question.style.opacity = "1";
     question.style.transform = "scale(1)";
     question.style.pointerEvents = locked ? "none" : "auto";
   }
-
   function openQuestion1(e){
     e?.preventDefault();
     if(isChecklistLocked()){
