@@ -1019,4 +1019,140 @@ input, select, textarea{ font-family: inherit; }
 }
 
 .top-table tbody tr.top-row-1{ background: linear-gradient(90deg, rgba(255,215,120,.15), transparent); }
-.top-table tbody tr.top-row-2{ background: linear-gradient(90deg, rgba(210,
+.top-table tbody tr.top-row-2{ background: linear-gradient(90deg, rgba(210,220,235,.15), transparent); }
+.top-table tbody tr.top-row-3{ background: linear-gradient(90deg, rgba(190,120,80,.12), transparent); }
+
+/* =========================================================
+   MÀN 7 — BỮA TRƯA
+   ========================================================= */
+.lunch-result-card{
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255,255,255,.98) 0%, rgba(255,250,240,.5) 45%, transparent 75%),
+    linear-gradient(180deg, #ffffff, #f8fbf6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 28px 22px 24px;
+  text-align: center;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.lunch-result-label{
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--muted);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.lunch-placeholder{
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 12px 0;
+}
+
+.lunch-dish-line{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0;
+}
+.lunch-dish-label{
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--muted);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.lunch-dish-name{
+  font-size: clamp(20px, 5.5vw, 26px);
+  font-weight: 950;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.lunch-mode-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.lunch-mode-btn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.96);
+  color: var(--ink);
+  text-align: center;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.lunch-mode-btn:active{ transform: scale(.96); }
+.lunch-mode-btn.home{ background: linear-gradient(145deg, #f4faf3, #eef8ef); border-color: #b9d4bc; }
+.lunch-mode-btn.out { background: linear-gradient(145deg, #ffffff, #fbfdfb); }
+.lunch-mode-btn.all { background: linear-gradient(145deg, #fbfdf6, #f2f8ef); }
+
+.lunch-mode-icon{ font-size: 24px; line-height: 1; }
+.lunch-mode-title{
+  font-size: 12px;
+  font-weight: 950;
+  color: var(--ink);
+}
+.lunch-mode-desc{
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+/* Rolling animation khi đang quay món */
+@keyframes lunchRoll{
+  0%   { transform: translateY(0) scale(1); }
+  50%  { transform: translateY(-1px) scale(1.005); }
+  100% { transform: translateY(0) scale(1); }
+}
+.lunch-result-card.rolling .lunch-dish-name{
+  animation: lunchRoll .18s ease-in-out infinite alternate;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 380px){
+  .wheel-viewport{ height: 240px; }
+  .wheel-item{ font-size: 17px; }
+  .wheel-item.selected{ font-size: 19px; }
+  .avatar{ width: 76px; height: 76px; font-size: 32px; }
+  .profile-card{ padding: 28px 20px 22px; }
+  .menu-item{ grid-template-columns: 40px minmax(0,1fr) 18px; padding: 12px; }
+  .menu-icon{ width: 40px; height: 40px; font-size: 18px; }
+  .checklist-table thead th,
+  .checklist-table tbody td{ padding: 12px 10px; }
+  .checklist-table thead th.col-status,
+  .checklist-table tbody td.col-status{ width: 66px; }
+  .checklist-table tbody td.col-time{ width: 70px; }
+  .att-day{ min-height: 56px; }
+  .att-status{ font-size: 7px; }
+  .lunch-mode-grid{ gap: 6px; }
+  .lunch-mode-btn{ padding: 12px 6px; }
+  .lunch-mode-icon{ font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    transition: none !important;
+    animation: none !important;
+  }
+}
