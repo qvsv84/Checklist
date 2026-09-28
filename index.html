@@ -9,18 +9,28 @@
 </head>
 <body>
 
-<!-- ============ MÀN 1: ĐĂNG NHẬP ============ -->
+<!-- ============================================================
+     MÀN 1 — ĐĂNG NHẬP
+     ============================================================ -->
 <section id="loginScreen" class="screen screen--active">
   <div class="login-wrap">
 
     <header class="login-header">
-      <h1 class="login-title">🐱 ĐẢO MÈO</h1>
+      <h1 class="login-title">
+        <span class="cat">🐱</span> ĐẢO MÈO
+        <svg class="title-underline" viewBox="0 0 130 12" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M2,8 Q30,2 65,6 T128,5" 
+                fill="none" stroke="#efd48a" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </h1>
       <p class="login-sub">Chọn tên của bạn để tiếp tục</p>
     </header>
 
-    <div class="wheel-area" id="wheelArea">
+    <!-- Wheel chọn tên -->
+    <div class="wheel-area">
       <div class="wheel-viewport" id="wheelViewport">
         <div class="wheel-selection"></div>
+        <div class="wheel-shine" id="wheelShine"></div>
         <div class="wheel-items" id="wheelItems"></div>
       </div>
       <p class="wheel-hint">Vuốt lên / xuống để chọn</p>
@@ -34,7 +44,9 @@
   </div>
 </section>
 
-<!-- ============ MÀN 2: TRANG CÁ NHÂN ============ -->
+<!-- ============================================================
+     MÀN 2 — TRANG CÁ NHÂN
+     ============================================================ -->
 <section id="profileScreen" class="screen">
   <div class="profile-wrap">
 
@@ -44,13 +56,15 @@
     </header>
 
     <div class="profile-card">
-      <div class="avatar" id="profileAvatar">?</div>
+      <div class="avatar-ring">
+        <div class="avatar" id="profileAvatar">?</div>
+      </div>
       <h2 class="profile-name" id="profileName">—</h2>
-      <p class="profile-subtitle">Trang cá nhân</p>
+      <p class="profile-subtitle">TRANG CÁ NHÂN</p>
 
       <!-- ============================================
            CHỖ NÀY ĐỂ BỔ SUNG SAU
-           Ví dụ: điểm, check-in, lịch sử, nút...
+           (điểm, check-in, lịch sử...)
            ============================================ -->
       <div class="profile-content" id="profileContent">
         <p class="profile-placeholder">
@@ -60,7 +74,6 @@
       <!-- ============================================ -->
 
     </div>
-
   </div>
 </section>
 
