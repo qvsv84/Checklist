@@ -966,7 +966,24 @@
       adminSaveBtn.disabled = false;
     }
   });
+// ===== Toast thông báo =====
+  function showToast(message, type = ""){
+    let container = document.getElementById("toastContainer");
+    if(!container){
+      container = document.createElement("div");
+      container.id = "toastContainer";
+      document.body.appendChild(container);
+    }
+    const toast = document.createElement("div");
+    toast.className = "toast" + (type ? " " + type : "");
+    toast.textContent = message;
+    container.appendChild(toast);
 
+    setTimeout(() => {
+      toast.remove();
+      if(container.children.length === 0) container.remove();
+    }, 3000);
+  }
   function setStatus(t){
     status.textContent = t;
     status.classList.add("show");
@@ -1177,6 +1194,16 @@
 
       const timeCell = tr.querySelector(".checkTime");
       const box = tr.querySelector(".checkBox");
+
+      const wasUnchecked = !oldChecked[idx];
+      const nowChecked = !!newData.checked[idx];
+      if(wasUnchecked && nowChecked){
+        const playerName = String(names[idx] || "").trim();
+        const playerTime = String(newData.times[idx] || "").trim();
+        if(playerName){
+          showToast(`🐱 ${playerName} vừa check lúc ${playerTime}`);
+        }
+      }
 
       if(timeCell) timeCell.textContent = times[idx] || "—";
       if(box) box.classList.toggle("checked", !!checked[idx]);
