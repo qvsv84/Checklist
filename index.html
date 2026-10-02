@@ -1,25 +1,3 @@
-Đã fix xong 🎯
-
-Lỗi gốc
-
-```js
-loadQuizStore && null;  // ← ReferenceError, giết IIFE #1 → IIFE #2 (Chấm công) không chạy
-```
-
-Những gì đã làm
-
-1. Xoá loadQuizStore && null; → nút Chấm công chạy lại
-2. Fix scope attendanceRankClient → export qua window
-3. Xoá CSS chết (quiz, quickToolsBar, pageNav, attendance-picker/summary/stat không dùng)
-4. Xoá JS chết (loadAndRender, revealTop3, playHeroAnimation, biến _heroAnimationPlayed, _top3Revealed, Q1_CACHE_KEY, CACHE_MIGRATION_KEY)
-5. Gộp 3 block theme trùng thành 1 (giữ đúng giá trị cuối cùng → giao diện không đổi)
-6. Gộp CSS nav (bỏ 4 rule grid chồng chéo)
-
-File nhẹ hơn ~30% nhưng giữ nguyên 100% tính năng và giao diện.
-
----
-
-```html
 <!doctype html>
 <html lang="vi">
 <head>
